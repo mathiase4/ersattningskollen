@@ -1,25 +1,28 @@
 const $ = (id) => document.getElementById(id);
 const fmt = (n) =>
   new Intl.NumberFormat("sv-SE", { maximumFractionDigits: 0 }).format(n);
+const toNum = (v) => parseFloat((v ?? "0").toString().replace(",", "."));
 
-function calculateAkassa(salary, ratePct, days, taxPct) {
-  const daily = salary / 21.75;
+// mode: "månad" -> räkna om till dagslön, "dag" -> använd direkt
+function calcAkassa({ mode, salaryInput, ratePct, days, taxPct }) {
+  const dailySalary = mode === "månad" ? salaryInput / 21.75 : salaryInput;
+
   const rate = Math.max(0, Math.min(100, ratePct || 0)) / 100;
-  const dailyGross = daily * rate;
+  const dailyGross = dailySalary * rate;
   const totalGross = dailyGross * days;
 
   const tax = Math.max(0, Math.min(60, taxPct || 0)) / 100;
   const dailyNet = dailyGross * (1 - tax);
   const totalNet = totalGross * (1 - tax);
 
-  return { daily, dailyGross, totalGross, dailyNet, totalNet, ratePct };
+  return { dailySalary, dailyGross, totalGross, dailyNet, totalNet, ratePct };
 }
 
-function renderAkassa(res) {
+function render(res) {
   $("out").innerHTML = `
     <h3>Resultat</h3>
     <ul>
-      <li>Dagslön (estimat): <strong>${fmt(res.daily)} kr</strong></li>
+      <li>Dagslön (estimat): <strong>${fmt(res.dailySalary)} kr</strong></li>
       <li>Ersättningsprocent: <strong>${res.ratePct}%</strong></li>
       <li>A-kassa per dag (brutto): <strong>${fmt(
         res.dailyGross
@@ -33,17 +36,37 @@ function renderAkassa(res) {
   `;
 }
 
+function onModeChange() {
+  const mode = $("mode").value;
+  const label = $("salaryLabel");
+  const salary = $("salary");
+
+  if (mode === "månad") {
+    label.textContent = "Månadslön (brutto)";
+    salary.step = "100";
+    if (!salary.placeholder || salary.placeholder.includes("1000")) {
+      salary.placeholder = "t.ex. 23000";
+    }
+  } else {
+    label.textContent = "Dagslön (brutto)";
+    salary.step = "1";
+    salary.placeholder = "t.ex. 1000";
+  }
+}
+
 function onSubmit(e) {
   e.preventDefault();
-  const salary = parseFloat(($("salary").value || "0").replace(",", "."));
-  const rate = parseFloat(($("rate").value || "0").replace(",", "."));
+  const mode = $("mode").value;
+  const salaryInput = toNum($("salary").value);
+  const ratePct = toNum($("rate").value);
   const days = parseInt($("days").value || "0", 10);
-  const tax = parseFloat(($("tax").value || "0").replace(",", "."));
-  if (salary <= 0 || days <= 0) {
-    $("out").textContent = "Fyll i lön och antal dagar.";
+  const taxPct = toNum($("tax").value);
+
+  if (salaryInput <= 0 || days <= 0) {
+    $("out").textContent = "Fyll i lön (>0) och antal dagar (>0).";
     return;
   }
-  renderAkassa(calculateAkassa(salary, rate, days, tax));
+  render(calcAkassa({ mode, salaryInput, ratePct, days, taxPct }));
 }
 
 function onReset() {
@@ -52,9 +75,13 @@ function onReset() {
   $("days").value = 22;
   $("tax").value = 30;
   $("out").textContent = "";
+  $("mode").value = "månad";
+  onModeChange();
 }
 
 window.addEventListener("DOMContentLoaded", () => {
   $("form").addEventListener("submit", onSubmit);
   $("resetBtn").addEventListener("click", onReset);
+  $("mode").addEventListener("change", onModeChange);
+  onModeChange(); // init label/placeholder
 });
