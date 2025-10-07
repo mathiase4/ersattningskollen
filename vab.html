@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VAB-kalkylator – Ersättningskollen</title>
+    <meta
+      name="description"
+      content="Förenklad VAB-kalkylator: uppskatta ersättning per dag och totalt."
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
+    />
+    <style>
+      .stack {
+        display: grid;
+        gap: 0.8rem;
+      }
+      .muted {
+        opacity: 0.8;
+        font-size: 0.95rem;
+      }
+      .result {
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <p><a href="index.html">← Tillbaka</a></p>
+      <h1>VAB – snabb uppskattning</h1>
+      <p class="muted">
+        Förenklad beräkning. Antagande: dagslön ≈
+        <code>månadslön / 21,75</code>, VAB ≈ <code>80%</code> av dagslönen.
+        Skatt (valfritt) för att se ungefärligt netto.
+      </p>
+
+      <form id="form" class="stack">
+        <label for="salary">Månadslön (brutto)</label>
+        <input
+          id="salary"
+          type="number"
+          inputmode="decimal"
+          min="0"
+          step="100"
+          placeholder="t.ex. 28000"
+          required
+        />
+
+        <label for="days">Antal VAB-dagar</label>
+        <input
+          id="days"
+          type="number"
+          min="1"
+          step="1"
+          placeholder="t.ex. 3"
+          required
+        />
+
+        <label for="tax">Skatt % (valfritt)</label>
+        <input id="tax" type="number" min="0" max="60" step="1" value="30" />
+
+        <button type="submit">Räkna</button>
+        <button type="button" id="resetBtn" class="secondary">Rensa</button>
+      </form>
+
+      <section id="out" class="result" aria-live="polite"></section>
+
+      <details>
+        <summary>Hur vi räknar</summary>
+        <ul>
+          <li>Dagslön ≈ <code>månadslön / 21,75</code></li>
+          <li>VAB per dag (brutto) ≈ <code>dagslön × 0,8</code></li>
+          <li>Netto ≈ <code>brutto × (1 − skatt%)</code></li>
+        </ul>
+        <p class="muted">
+          Detta är en uppskattning och tar inte hänsyn till alla regler/tak.
+          Kontrollera alltid hos Försäkringskassan.
+        </p>
+      </details>
+
+      <footer>
+        <hr />
+        <small>© Ersättningskollen</small>
+      </footer>
+    </main>
+
+    <!-- JS ligger externt i js/vab.js -->
+    <script src="js/vab.js" defer></script>
+  </body>
+</html>
