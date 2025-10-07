@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>A-kassa (förenklad) – Ersättningskollen</title>
+    <meta
+      name="description"
+      content="Förenklad A-kassa-kalkylator: uppskatta daglig och total ersättning utifrån lön och vald ersättningsprocent."
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
+    />
+    <style>
+      .stack {
+        display: grid;
+        gap: 0.8rem;
+      }
+      .muted {
+        opacity: 0.8;
+        font-size: 0.95rem;
+      }
+      .result {
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <p><a href="index.html">← Tillbaka</a></p>
+      <h1>A-kassa – snabb uppskattning (förenklad)</h1>
+      <p class="muted">
+        Denna MVP räknar enkelt: dagslön ≈ <code>månadslön / 21,75</code> och
+        ersättning ≈ <code>dagslön × ersättningsprocent</code> (t.ex. 80%).<br />
+        <strong>Obs:</strong> Inga tak, kvalifikationsregler eller periodnivåer
+        tas med här. Se detta som en snabb ungefärlig siffra.
+      </p>
+
+      <form id="form" class="stack">
+        <label for="salary">Månadslön (brutto)</label>
+        <input
+          id="salary"
+          type="number"
+          inputmode="decimal"
+          min="0"
+          step="100"
+          placeholder="t.ex. 23000"
+          required
+        />
+
+        <label for="rate">Ersättningsprocent</label>
+        <input id="rate" type="number" min="0" max="100" step="1" value="80" />
+
+        <label for="days">Antal dagar</label>
+        <input id="days" type="number" min="1" step="1" value="22" />
+
+        <label for="tax">Skatt % (valfritt)</label>
+        <input id="tax" type="number" min="0" max="60" step="1" value="30" />
+
+        <button type="submit">Räkna</button>
+        <button type="button" id="resetBtn" class="secondary">Rensa</button>
+      </form>
+
+      <section id="out" class="result" aria-live="polite"></section>
+
+      <details>
+        <summary>Hur vi räknar (enkelt)</summary>
+        <ul>
+          <li>Dagslön ≈ <code>månadslön / 21,75</code></li>
+          <li>
+            Daglig ersättning (brutto) ≈
+            <code>dagslön × (ersättningsprocent / 100)</code>
+          </li>
+          <li>Netto ≈ <code>brutto × (1 − skatt%)</code></li>
+        </ul>
+        <p class="muted">
+          Regler, tak och perioder kan ändras och påverkar verklig nivå. Detta
+          är en snabb uppskattning.
+        </p>
+      </details>
+
+      <footer>
+        <hr />
+        <small>© Ersättningskollen</small>
+      </footer>
+    </main>
+
+    <script src="assets/js/akassa.js" defer></script>
+  </body>
+</html>
