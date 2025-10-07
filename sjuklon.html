@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sjuklön – Ersättningskollen</title>
+    <meta
+      name="description"
+      content="Förenklad sjuklön-kalkylator: uppskatta ersättning per dag och totalt (utan karensavdrag)."
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
+    />
+    <style>
+      .stack {
+        display: grid;
+        gap: 0.8rem;
+      }
+      .muted {
+        opacity: 0.8;
+        font-size: 0.95rem;
+      }
+      .result {
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <p><a href="index.html">← Tillbaka</a></p>
+      <h1>Sjuklön – snabb uppskattning</h1>
+      <p class="muted">
+        Förenklad beräkning: dagslön ≈ <code>månadslön / 21,75</code>, sjuklön ≈
+        <code>80%</code> av dagslönen.<br />
+        <strong>Obs:</strong> Denna MVP tar <em>inte</em> med
+        karensavdrag/avtalsdetaljer. Se detta som en snabb ungefärlig siffra.
+      </p>
+
+      <form id="form" class="stack">
+        <label for="salary">Månadslön (brutto)</label>
+        <input
+          id="salary"
+          type="number"
+          inputmode="decimal"
+          min="0"
+          step="100"
+          placeholder="t.ex. 28000"
+          required
+        />
+
+        <label for="days">Antal sjukdagar</label>
+        <input
+          id="days"
+          type="number"
+          min="1"
+          step="1"
+          placeholder="t.ex. 3"
+          required
+        />
+
+        <label for="tax">Skatt % (valfritt)</label>
+        <input id="tax" type="number" min="0" max="60" step="1" value="30" />
+
+        <button type="submit">Räkna</button>
+        <button type="button" id="resetBtn" class="secondary">Rensa</button>
+      </form>
+
+      <section id="out" class="result" aria-live="polite"></section>
+
+      <details>
+        <summary>Hur vi räknar (enkelt)</summary>
+        <ul>
+          <li>Dagslön ≈ <code>månadslön / 21,75</code></li>
+          <li>Sjuklön per dag (brutto) ≈ <code>dagslön × 0,8</code></li>
+          <li>Netto ≈ <code>brutto × (1 − skatt%)</code></li>
+        </ul>
+        <p class="muted">
+          Karensavdrag och olika kollektivavtal kan påverka utfallet. Detta är
+          en snabb uppskattning.
+        </p>
+      </details>
+
+      <footer>
+        <hr />
+        <small>© Ersättningskollen</small>
+      </footer>
+    </main>
+
+    <script src="assets/js/sjuklon.js" defer></script>
+  </body>
+</html>
