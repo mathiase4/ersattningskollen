@@ -2,8 +2,13 @@ const $ = (id) => document.getElementById(id);
 const fmt = (n) =>
   new Intl.NumberFormat("sv-SE", { maximumFractionDigits: 0 }).format(n);
 
-function calculate(salary, days, taxPct) {
-  const dailySalary = salary / 21.75;
+function toNum(v) {
+  return parseFloat((v ?? "0").toString().replace(",", "."));
+}
+
+function calculate({ mode, salaryInput, days, taxPct }) {
+  // Om månadslön: räkna om till dagslön, annars använd inmatad dagslön
+  const dailySalary = mode === "månad" ? salaryInput / 21.75 : salaryInput;
   const vabDailyGross = dailySalary * 0.8;
   const totalGross = vabDailyGross * days;
 
@@ -29,26 +34,46 @@ function render(res) {
   `;
 }
 
+function onModeChange() {
+  const mode = $("mode").value;
+  const label = $("salaryLabel");
+  const salary = $("salary");
+
+  if (mode === "månad") {
+    label.textContent = "Månadslön (brutto)";
+    salary.step = "100";
+    salary.placeholder = "t.ex. 28000";
+  } else {
+    label.textContent = "Dagslön (brutto)";
+    salary.step = "1";
+    salary.placeholder = "t.ex. 1000";
+  }
+}
+
 function onSubmit(e) {
   e.preventDefault();
-  const salary = parseFloat($("salary").value || "0");
+  const mode = $("mode").value;
+  const salaryInput = toNum($("salary").value);
   const days = parseInt($("days").value || "0", 10);
-  const tax = parseFloat($("tax").value || "0");
-  if (salary <= 0 || days <= 0) {
+  const taxPct = toNum($("tax").value);
+  if (salaryInput <= 0 || days <= 0) {
     $("out").textContent = "Fyll i lön och antal dagar.";
     return;
   }
-  render(calculate(salary, days, tax));
+  render(calculate({ mode, salaryInput, days, taxPct }));
 }
 
 function onReset() {
   $("form").reset();
   $("tax").value = 30;
   $("out").textContent = "";
+  $("mode").value = "månad";
+  onModeChange();
 }
 
-// init
 window.addEventListener("DOMContentLoaded", () => {
   $("form").addEventListener("submit", onSubmit);
   $("resetBtn").addEventListener("click", onReset);
+  $("mode").addEventListener("change", onModeChange);
+  onModeChange(); // init label/placeholder
 });
