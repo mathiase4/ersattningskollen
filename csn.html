@@ -12,6 +12,9 @@
       rel="stylesheet"
       href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
     />
+
+    <link rel="stylesheet" href="assets/css/site.css" />
+
     <style>
       .stack {
         display: grid;
@@ -33,8 +36,16 @@
   </head>
   <body>
     <main class="container">
-      <p><a href="index.html">← Tillbaka</a></p>
-      <h1>CSN + extrajobb (netto)</h1>
+      <nav class="navbar">
+        <ul>
+          <li><a href="index.html">Start</a></li>
+          <li><a href="vab.html">VAB</a></li>
+          <li><a href="sjuklon.html">Sjuklön</a></li>
+          <li><a href="akassa.html">A-kassa</a></li>
+          <li><a href="csn.html" aria-current="page">CSN + extrajobb</a></li>
+        </ul>
+      </nav>
+
       <p class="muted">
         Snabb uppskattning: vi antar att <strong>jobb-lön beskattas</strong> och
         att <strong>CSN-bidrag/lån inte beskattas</strong> (lånet betalas
