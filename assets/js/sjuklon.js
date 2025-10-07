@@ -1,10 +1,14 @@
 const $ = (id) => document.getElementById(id);
 const fmt = (n) =>
   new Intl.NumberFormat("sv-SE", { maximumFractionDigits: 0 }).format(n);
+const toNum = (v) => parseFloat((v ?? "0").toString().replace(",", "."));
 
-function calculateSick(salary, days, taxPct) {
-  const daily = salary / 21.75;
-  const sickDailyGross = daily * 0.8; // enkel modell (utan karensavdrag)
+// Förenklad sjuklön: 80% av dagslön (MVP – utan karens/avtalsdetaljer)
+function calculateSick({ mode, salaryInput, days, taxPct }) {
+  // Om månadslön: räkna om till dagslön, annars använd inmatad dagslön
+  const daily = mode === "månad" ? salaryInput / 21.75 : salaryInput;
+
+  const sickDailyGross = daily * 0.8;
   const totalGross = sickDailyGross * days;
 
   const tax = Math.max(0, Math.min(60, taxPct || 0)) / 100;
@@ -31,25 +35,49 @@ function renderSick(res) {
   `;
 }
 
+function onModeChange() {
+  const mode = $("mode").value;
+  const label = $("salaryLabel");
+  const salary = $("salary");
+
+  if (mode === "månad") {
+    label.textContent = "Månadslön (brutto)";
+    salary.step = "100";
+    if (!salary.placeholder || salary.placeholder.includes("1000")) {
+      salary.placeholder = "t.ex. 28000";
+    }
+  } else {
+    label.textContent = "Dagslön (brutto)";
+    salary.step = "1";
+    salary.placeholder = "t.ex. 1000";
+  }
+}
+
 function onSubmit(e) {
   e.preventDefault();
-  const salary = parseFloat(($("salary").value || "0").replace(",", "."));
+  const mode = $("mode").value;
+  const salaryInput = toNum($("salary").value);
   const days = parseInt($("days").value || "0", 10);
-  const tax = parseFloat(($("tax").value || "0").replace(",", "."));
-  if (salary <= 0 || days <= 0) {
-    $("out").textContent = "Fyll i lön och antal dagar.";
+  const taxPct = toNum($("tax").value);
+
+  if (salaryInput <= 0 || days <= 0) {
+    $("out").textContent = "Fyll i lön (>0) och antal dagar (>0).";
     return;
   }
-  renderSick(calculateSick(salary, days, tax));
+  renderSick(calculateSick({ mode, salaryInput, days, taxPct }));
 }
 
 function onReset() {
   $("form").reset();
   $("tax").value = 30;
   $("out").textContent = "";
+  $("mode").value = "månad";
+  onModeChange();
 }
 
 window.addEventListener("DOMContentLoaded", () => {
   $("form").addEventListener("submit", onSubmit);
   $("resetBtn").addEventListener("click", onReset);
+  $("mode").addEventListener("change", onModeChange);
+  onModeChange(); // init label/placeholder
 });

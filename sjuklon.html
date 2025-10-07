@@ -38,7 +38,13 @@
       </p>
 
       <form id="form" class="stack">
-        <label for="salary">Månadslön (brutto)</label>
+        <label for="mode">Inmatning</label>
+        <select id="mode">
+          <option value="månad" selected>Månadslön</option>
+          <option value="dag">Dagslön</option>
+        </select>
+
+        <label for="salary" id="salaryLabel">Månadslön (brutto)</label>
         <input
           id="salary"
           type="number"
