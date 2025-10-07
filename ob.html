@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OB-tillägg (generellt) – Ersättningskollen</title>
+    <meta
+      name="description"
+      content="Förenklad OB-kalkylator: räkna kväll/helg/natt-påslag på timlön."
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
+    />
+    <style>
+      .stack {
+        display: grid;
+        gap: 0.8rem;
+      }
+      .muted {
+        opacity: 0.8;
+        font-size: 0.95rem;
+      }
+      .result {
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <p><a href="index.html">← Tillbaka</a></p>
+      <h1>OB-tillägg – snabb uppskattning</h1>
+      <p class="muted">
+        Förenklad modell. Välj ett typiskt påslag (exempel), ange timlön, timmar
+        och dagar. Verkliga nivåer styrs av ditt kollektivavtal.
+      </p>
+
+      <form id="form" class="stack">
+        <label for="hourly">Timlön (brutto)</label>
+        <input
+          id="hourly"
+          type="number"
+          inputmode="decimal"
+          min="0"
+          step="1"
+          placeholder="t.ex. 140"
+          required
+        />
+
+        <label for="hours">Timmar per dag</label>
+        <input id="hours" type="number" min="1" step="1" value="8" required />
+
+        <label for="days">Antal dagar</label>
+        <input id="days" type="number" min="1" step="1" value="5" required />
+
+        <label for="ob">OB-typ (exempelpåslag)</label>
+      </form>
+    </main>
+  </body>
+</html>
