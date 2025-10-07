@@ -2,6 +2,21 @@ const $ = (id) => document.getElementById(id);
 const fmt = (n) =>
   new Intl.NumberFormat("sv-SE", { maximumFractionDigits: 0 }).format(n);
 
+function render(res) {
+  $("out").innerHTML = `
+    <h3>Resultat</h3>
+    <ul>
+      <li>Dagslön (estimat): <strong>${fmt(res.dailySalary)} kr</strong></li>
+      <li>VAB per dag (brutto): <strong>${fmt(
+        res.vabDailyGross
+      )} kr</strong></li>
+      <li>Totalt VAB (brutto): <strong>${fmt(res.totalGross)} kr</strong></li>
+      <li>VAB per dag (netto ~): <strong>${fmt(res.dailyNet)} kr</strong></li>
+      <li>Totalt VAB (netto ~): <strong>${fmt(res.totalNet)} kr</strong></li>
+    </ul>
+  `;
+}
+
 function toNum(v) {
   return parseFloat((v ?? "0").toString().replace(",", "."));
 }
@@ -20,6 +35,13 @@ function calculate({ mode, salaryInput, days, taxPct }) {
 }
 
 function render(res) {
+  const text = `VAB-resultat
+Dagslön (estimat): ${fmt(res.dailySalary)} kr
+VAB per dag (brutto): ${fmt(res.vabDailyGross)} kr
+Totalt VAB (brutto): ${fmt(res.totalGross)} kr
+VAB per dag (netto ~): ${fmt(res.dailyNet)} kr
+Totalt VAB (netto ~): ${fmt(res.totalNet)} kr`;
+
   $("out").innerHTML = `
     <h3>Resultat</h3>
     <ul>
@@ -32,6 +54,10 @@ function render(res) {
       <li>Totalt VAB (netto ~): <strong>${fmt(res.totalNet)} kr</strong></li>
     </ul>
   `;
+
+  // spara texten för kopiering och aktivera knappen
+  $("out").dataset.copy = text;
+  $("copyBtn").disabled = false;
 }
 
 function onModeChange() {
@@ -75,5 +101,5 @@ window.addEventListener("DOMContentLoaded", () => {
   $("form").addEventListener("submit", onSubmit);
   $("resetBtn").addEventListener("click", onReset);
   $("mode").addEventListener("change", onModeChange);
-  onModeChange(); // init label/placeholder
+  onModeChange(); // init
 });
