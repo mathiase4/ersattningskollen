@@ -12,6 +12,8 @@
       rel="stylesheet"
       href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
     />
+    <link rel="stylesheet" href="assets/css/site.css" />
+
     <style>
       .stack {
         display: grid;
@@ -28,8 +30,18 @@
   </head>
   <body>
     <main class="container">
-      <p><a href="index.html">← Tillbaka</a></p>
+      <nav class="navbar">
+        <ul>
+          <li><a href="index.html">Start</a></li>
+          <li><a href="vab.html">VAB</a></li>
+          <li><a href="sjuklon.html">Sjuklön</a></li>
+          <li><a href="akassa.html">A-kassa</a></li>
+          <li><a href="csn.html">CSN + extrajobb</a></li>
+        </ul>
+      </nav>
+
       <h1>VAB – snabb uppskattning</h1>
+
       <p class="muted">
         Förenklad beräkning. Antagande: dagslön ≈
         <code>månadslön / 21,75</code>, VAB ≈ <code>80%</code> av dagslönen.
