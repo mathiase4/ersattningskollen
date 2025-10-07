@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CSN + extrajobb (netto) – Ersättningskollen</title>
+    <meta
+      name="description"
+      content="Räkna snabbt din månadsbudget: CSN (bidrag + lån) + extrajobb efter skatt."
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
+    />
+    <style>
+      .stack {
+        display: grid;
+        gap: 0.8rem;
+      }
+      .muted {
+        opacity: 0.8;
+        font-size: 0.95rem;
+      }
+      .result {
+        margin-top: 1rem;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <p><a href="index.html">← Tillbaka</a></p>
+      <h1>CSN + extrajobb (netto)</h1>
+      <p class="muted">
+        Snabb uppskattning: vi antar att <strong>jobb-lön beskattas</strong> och
+        att <strong>CSN-bidrag/lån inte beskattas</strong> (lånet betalas
+        tillbaka senare). Välj om totalen ska räkna med lånet.
+      </p>
+
+      <form id="form" class="stack">
+        <fieldset>
+          <legend>CSN per månad</legend>
+          <div class="grid-2">
+            <label for="csnBidrag"
+              >Bidrag (kr/mån)
+              <input
+                id="csnBidrag"
+                type="number"
+                inputmode="decimal"
+                min="0"
+                step="50"
+                value="0"
+              />
+            </label>
+            <label for="csnLan"
+              >Lån (kr/mån)
+              <input
+                id="csnLan"
+                type="number"
+                inputmode="decimal"
+                min="0"
+                step="50"
+                value="0"
+              />
+            </label>
+          </div>
+          <label class="muted">
+            <input id="includeLoan" type="checkbox" checked /> Räkna med lånet i
+            totalen
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Extrajobb</legend>
+          <div class="grid-2">
+            <label for="hourly"
+              >Timlön (brutto)
+              <input
+                id="hourly"
+                type="number"
+                inputmode="decimal"
+                min="0"
+                step="1"
+                placeholder="t.ex. 140"
+                required
+              />
+            </label>
+            <label for="hoursPerWeek"
+              >Timmar/vecka
+              <input
+                id="hoursPerWeek"
+                type="number"
+                min="0"
+                step="1"
+                value="10"
+                required
+              />
+            </label>
+          </div>
+          <div class="grid-2">
+            <label for="weeksPerMonth"
+              >Veckor/månad
+              <input
+                id="weeksPerMonth"
+                type="number"
+                min="1"
+                step="0.01"
+                value="4.33"
+              />
+            </label>
+            <label for="tax"
+              >Skatt % på lön
+              <input
+                id="tax"
+                type="number"
+                min="0"
+                max="60"
+                step="1"
+                value="30"
+              />
+            </label>
+          </div>
+        </fieldset>
+
+        <button type="submit">Räkna</button>
+        <button type="button" id="resetBtn" class="secondary">Rensa</button>
+      </form>
+
+      <section id="out" class="result" aria-live="polite"></section>
+
+      <details>
+        <summary>Hur vi räknar</summary>
+        <ul>
+          <li>
+            Jobb-brutto/mån =
+            <code>timlön × timmar/vecka × veckor/månad</code> (standard 4,33)
+          </li>
+          <li>Jobb-netto/mån ≈ <code>brutto × (1 − skatt%)</code></li>
+          <li>
+            CSN-bidrag/lån antas utbetalas skattefritt; lån kan väljas bort i
+            totalen.
+          </li>
+        </ul>
+        <p class="muted">
+          Detta är en förenkling och tar inte hänsyn till fribelopp/regler som
+          kan ändras. Kolla alltid aktuella villkor hos CSN.
+        </p>
+      </details>
+
+      <footer>
+        <hr />
+        <small>© Ersättningskollen</small>
+      </footer>
+    </main>
+
+    <script src="assets/js/csn.js" defer></script>
+  </body>
+</html>
