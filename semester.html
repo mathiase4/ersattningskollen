@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Semesterersättning – Ersättningskollen</title>
+    <meta
+      name="description"
+      content="Förenklad semesterersättnings-kalkylator: standard 12% av intjänad lön."
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
+    />
+    <style>
+      .stack {
+        display: grid;
+        gap: 0.8rem;
+      }
+      .muted {
+        opacity: 0.8;
+        font-size: 0.95rem;
+      }
+      .result {
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <p><a href="index.html">← Tillbaka</a></p>
+      <h1>Semesterersättning – snabb uppskattning</h1>
+      <p class="muted">
+        Förenklad modell för timanställd: semesterersättning ≈
+        <code>procent × (timlön × timmar × dagar)</code>.<br />
+        Standardexempel: <strong>12%</strong>. Verklig nivå styrs av
+        avtal/anställningsform.
+      </p>
+
+      <form id="form" class="stack">
+        <label for="hourly">Timlön (brutto)</label>
+        <input
+          id="hourly"
+          type="number"
+          inputmode="decimal"
+          min="0"
+          step="1"
+          placeholder="t.ex. 140"
+          required
+        />
+
+        <label for="hours">Timmar per dag</label>
+        <input id="hours" type="number" min="1" step="1" value="8" required />
+
+        <label for="days">Antal dagar</label>
+        <input id="days" type="number" min="1" step="1" value="22" required />
+
+        <label for="rate">Semesterersättning %</label>
+        <input id="rate" type="number" min="0" max="50" step="0.5" value="12" />
+
+        <label for="tax">Skatt % (valfritt)</label>
+        <input id="tax" type="number" min="0" max="60" step="1" value="30" />
+
+        <button type="submit">Räkna</button>
+        <button type="button" id="resetBtn" class="secondary">Rensa</button>
+      </form>
+
+      <section id="out" class="result" aria-live="polite"></section>
+
+      <details>
+        <summary>Hur vi räknar (enkelt)</summary>
+        <ul>
+          <li>Intjänad lön = <code>timlön × timmar × dagar</code></li>
+          <li>
+            Semesterersättning (brutto) =
+            <code>intjänad lön × (procent/100)</code>
+          </li>
+          <li>Netto ≈ <code>brutto × (1 − skatt%)</code></li>
+        </ul>
+        <p class="muted">
+          Detta är en snabb uppskattning. Kolla ditt avtal för exakt
+          procentsats.
+        </p>
+      </details>
+
+      <footer>
+        <hr />
+        <small>© Ersättningskollen</small>
+      </footer>
+    </main>
+
+    <script src="assets/js/semester.js" defer></script>
+  </body>
+</html>
